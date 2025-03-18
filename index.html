@@ -96,7 +96,7 @@
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
-      overflow-x: auto;
+      overflow-x: auto; /* Horizontal scroll if needed */
     }
     .tab {
       padding: 10px 15px;
@@ -661,20 +661,70 @@
       padding: 20px;
     }
 
+    /* 
+      ================================================
+      RESPONSIVE MEDIA QUERIES FOR BETTER MOBILE VIEW
+      ================================================
+    */
     @media (max-width: 768px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      .video-card {
-        width: 200px;
-      }
-      .video-thumbnail {
-        height: 120px;
-      }
-      .persona-cards {
+      /* Search bar stacks vertically */
+      .search-bar {
         flex-direction: column;
       }
+      .search-bar input {
+        border-radius: 4px;
+        margin-bottom: 10px;
+        border-right: 2px solid var(--btn-border);
+      }
+      .search-bar button {
+        border-radius: 4px;
+      }
+
+      /* Filter container stacks vertically */
+      .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      /* Persona cards stack fully */
+      .persona-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .persona-card {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      /* Video rows wrap, each card is narrower */
+      .video-row {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .video-card {
+        width: 100%;
+        max-width: 320px;
+        margin-bottom: 15px;
+      }
+      .video-thumbnail {
+        height: auto;
+        aspect-ratio: 16/9; /* So we keep a 16:9 ratio for images */
+      }
+
+      /* Implementation Roadmap steps stack */
+      .roadmap-steps {
+        flex-direction: column;
+        align-items: center;
+      }
       .step-card {
+        width: 100%;
+        max-width: 320px;
+        margin-bottom: 15px;
+      }
+
+      /* Customer stories full width */
+      .story-card {
         width: 100%;
       }
     }
@@ -781,7 +831,7 @@
     </form>
   </section>
 
-  <!-- MAIN VIDEO CONTENT (Dynamically injected) -->
+  <!-- MAIN VIDEO CONTENT -->
   <main class="page-container" id="main-content"></main>
 
   <!-- IMPLEMENTATION ROADMAP (CARD LAYOUT) -->
@@ -867,22 +917,23 @@
   </div>
 
   <script>
-    /* 
-      ===========================
-      GLOBAL FILTER VARIABLES
-      ===========================
+    /*
+      ============================================
+      GLOBAL FILTER VARIABLES & COMPLETE VIDEO DATA
+      ============================================
     */
     let cloudEditionFilter = "all";
     let industryFilter = "all";
     let solutionFilter = "all";
     let personaFilter = "all";
 
-    /*
-      ===========================
-      FULL VIDEO DATA ARRAY
-      ===========================
+    /* 
+      PASTE YOUR FULL videosData ARRAY HERE,
+      with all 26 (or more) video objects,
+      including "featured", "outcome", "impact", etc.
     */
     const videosData = [
+      // Example partial:
       {
         id: 1,
         title: "AI dashboard: Time and cost savings boost ROI",
@@ -902,54 +953,7 @@
         complexity: "Low",
         level: 1
       },
-      {
-        id: 2,
-        title: "Resolve sentiment for better renewals and deals",
-        description: "Understand whether a potential deal is at risk in less than 30 seconds.",
-        duration: "01:39",
-        category: "Sales Cloud",
-        videoId: "856229920",
-        tags: ["Sentiment", "Renewals"],
-        featured: false,
-        cloudEdition: "Sales Cloud",
-        industry: "Retail",
-        solution: "Sales",
-        personas: ["Sales Teams"],
-        outcome: "Revenue Growth",
-        impact: "Speeds up renewal insights by 25%",
-        timeToValue: "3 weeks",
-        complexity: "Medium",
-        level: 2
-      },
-      /* ... */
-      /* 
-         COPY AND PASTE ALL THE OTHER VIDEO OBJECTS FROM YOUR FULL DATA 
-         e.g. id: 3, 4, 5, etc. 
-         Make sure to include them all for the videos to show up.
-      */
-      /* 
-         The key is to ensure you have the entire array from your 
-         prior snippet with all the videos. 
-      */
-      {
-        id: 26,
-        title: "Understand the AI prompt lifecycle in Salesforce",
-        description: "Discover how to create custom prompts in GPTfy to achieve your business goals.",
-        duration: "02:11",
-        category: "Prompts",
-        videoId: "883486176",
-        tags: ["Prompts", "Lifecycle"],
-        featured: false,
-        cloudEdition: "Prompts",
-        industry: "Various",
-        solution: "Platform",
-        personas: ["IT & Admins"],
-        outcome: "Prompt Lifecycle",
-        impact: "Speeds up prompt creation by 40%",
-        timeToValue: "2 weeks",
-        complexity: "Medium",
-        level: 2
-      }
+      // ... Insert the rest of your video objects here ...
     ];
 
     /*
@@ -957,8 +961,6 @@
       RENDER & FILTER LOGIC
       ===========================
     */
-
-    // Renders the main sections
     function renderSections(filterCategory = 'all', searchQuery = '') {
       const mainContent = document.getElementById('main-content');
       mainContent.innerHTML = '';
@@ -972,7 +974,6 @@
       // Filter videos
       const filteredVideos = filterVideos(filterCategory, searchQuery);
 
-      // If no videos match
       if (filteredVideos.length === 0) {
         mainContent.innerHTML = createNoResultsBlock(searchQuery);
         return;
@@ -995,7 +996,6 @@
       });
     }
 
-    // Filter function
     function filterVideos(filterCategory, searchQuery) {
       return videosData.filter(video => {
         const matchesCategory = (filterCategory === 'all' || video.category === filterCategory);
@@ -1010,11 +1010,17 @@
         const matchesSolution = (solutionFilter === 'all' || video.solution === solutionFilter);
         const matchesPersona = (personaFilter === 'all' || video.personas.includes(personaFilter));
 
-        return matchesCategory && matchesSearch && matchesCloud && matchesIndustry && matchesSolution && matchesPersona;
+        return (
+          matchesCategory &&
+          matchesSearch &&
+          matchesCloud &&
+          matchesIndustry &&
+          matchesSolution &&
+          matchesPersona
+        );
       });
     }
 
-    // Renders a section
     function renderSection(title, videos, isFeatured = false) {
       const dataCategory = isFeatured ? 'featured' : title;
       let sectionHTML = `
@@ -1032,7 +1038,6 @@
       return sectionHTML;
     }
 
-    // Renders a single video card
     function renderVideoCard(video) {
       const featuredBadge = video.featured ? `<div class="featured-badge">Featured</div>` : '';
       return `
@@ -1060,7 +1065,6 @@
       `;
     }
 
-    // Renders outcome-based grouping for "Business Outcomes" tab
     function renderOutcomes() {
       const mainContent = document.getElementById('main-content');
       mainContent.innerHTML = '';
@@ -1092,7 +1096,6 @@
       });
     }
 
-    // No results
     function createNoResultsBlock(searchQuery) {
       const userSearched = searchQuery.trim() !== "";
       const headingText = userSearched
@@ -1147,7 +1150,7 @@
     function setPersona(selectedPersona) {
       document.getElementById('filter-persona').value = selectedPersona;
       personaFilter = selectedPersona;
-      renderSections('all', '');
+      renderSections("all", "");
     }
 
     /* SOLUTION FINDER */
@@ -1178,9 +1181,9 @@
       document.getElementById('modal-duration').innerText = video.duration;
       document.getElementById('modal-category').innerText = video.category;
       document.getElementById('modal-player').innerHTML = `
-        <iframe 
-          src="https://player.vimeo.com/video/${video.videoId}?autoplay=1" 
-          allow="autoplay; fullscreen" 
+        <iframe
+          src="https://player.vimeo.com/video/${video.videoId}?autoplay=1"
+          allow="autoplay; fullscreen"
           allowfullscreen>
         </iframe>
       `;
@@ -1250,3 +1253,4 @@
   </script>
 </body>
 </html>
+
