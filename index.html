@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Salesforce + AI Demo Videos</title>
+
+  <!-- Import Satoshi font from a public CDN -->
+  <link rel="preconnect" href="https://fonts.cdnfonts.com" />
+  <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-main: #38035b;         /* Main background color */
+      --text-color: #ffffff;      /* White text */
+      --btn-border: #ffffff;      /* White border for buttons */
+      --font-family: 'Satoshi', sans-serif;
+
+      /* Card backgrounds & accent colors */
+      --card-bg: rgba(255,255,255,0.1);
+      --accent-color: #FFD000;    /* For step number circle & other accents */
+      --accent-text: #38035b;     /* For step number text */
+    }
+
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-color);
+      line-height: 1.4;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* HEADER */
+    header {
+      padding: 20px 0;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      max-width: 700px;
+      line-height: 1.4;
+    }
+
+    /* SEARCH BAR */
+    .search-bar {
+      display: flex;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid var(--btn-border);
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+      background-color: transparent;
+      color: var(--text-color);
+    }
+    .search-bar input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+    .search-bar button {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 2px solid var(--btn-border);
+      border-radius: 0 4px 4px 0;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .search-bar button:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* TABS */
+    .tabs-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    .tab {
+      padding: 10px 15px;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      background-color: rgba(255,255,255,0.1);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    .tab.active {
+      border-color: var(--btn-border);
+    }
+
+    /* FILTER CONTAINER */
+    .filter-container {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .select-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .select-wrapper::after {
+      content: "▼";
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #000;
+      font-size: 0.8rem;
+    }
+    .select-wrapper select {
+      background-color: #ffffff;
+      color: #000000;
+      border: 2px solid #ffffff;
+      border-radius: 4px;
+      padding: 8px 30px 8px 12px;
+      font-size: 14px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+    .select-wrapper select option {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    .clear-filters-btn {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 2px solid var(--btn-border);
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .clear-filters-btn:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* EXPLORE BY PERSONA SECTION */
+    .persona-section {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .persona-section h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    .persona-cards {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .persona-card {
+      background-color: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      padding: 15px;
+      width: 200px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .persona-card:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    .persona-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+    .persona-card p {
+      font-size: 0.9rem;
+    }
+
+    /* SOLUTION FINDER SECTION */
+    .solution-finder {
+      margin: 40px 0;
+      padding: 20px;
+      background-color: var(--card-bg);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .solution-finder h2 {
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+    }
+    .solution-finder form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .solution-finder input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #000;
+    }
+    .solution-finder button {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 2px solid var(--btn-border);
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .solution-finder button:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* VIDEO ROWS & CARDS */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .section-header h2 {
+      font-size: 1.8rem;
+    }
+    .see-all {
+      color: var(--text-color);
+      text-decoration: none;
+      border: 2px solid var(--btn-border);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      background-color: transparent;
+    }
+    .see-all:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    .video-row {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      padding-bottom: 10px;
+    }
+    .video-row::-webkit-scrollbar {
+      height: 6px;
+    }
+    .video-row::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 3px;
+    }
+    .video-card {
+      position: relative;
+      width: 250px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.3s;
+      overflow: hidden;
+    }
+    .video-card:hover {
+      transform: scale(1.05);
+    }
+    /* Featured badge */
+    .featured-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background-color: #FFD000;
+      color: #38035b;
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 4px 6px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+    .video-thumbnail {
+      width: 100%;
+      height: 140px;
+      border-radius: 4px 4px 0 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.2);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .video-card:hover .play-button {
+      opacity: 1;
+    }
+    .play-button:after {
+      content: "";
+      border-style: solid;
+      border-width: 10px 0 10px 16px;
+      border-color: transparent transparent transparent #fff;
+      margin-left: 4px;
+    }
+    .video-info {
+      padding: 10px;
+    }
+    .video-title {
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #fff;
+    }
+    .video-description {
+      font-size: 0.9rem;
+      color: #e0e0e0;
+      height: 2.4em;
+      overflow: hidden;
+    }
+    .video-duration {
+      font-size: 0.8rem;
+      color: #ccc;
+      margin-top: 5px;
+    }
+    .video-category {
+      font-size: 0.8rem;
+      border: 1px solid #fff;
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 5px;
+    }
+    .video-tags {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    .video-personas {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    .video-impact {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+
+    /* No Results & Suggestion Form */
+    .no-results {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .no-results h2 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+    .suggestion-form {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .suggestion-form label {
+      font-weight: bold;
+      text-align: left;
+    }
+    .suggestion-form input,
+    .suggestion-form textarea {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #000;
+    }
+    .suggestion-form button {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 2px solid var(--btn-border);
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .suggestion-form button:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* Implementation Roadmap (card layout) */
+    .implementation-roadmap {
+      margin: 40px 0;
+      text-align: center;
+    }
+    .implementation-roadmap h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+    .roadmap-steps {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .step-card {
+      background-color: var(--card-bg);
+      border-radius: 6px;
+      padding: 20px;
+      width: 250px;
+      flex-shrink: 0;
+      position: relative;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      color: var(--accent-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    .step-card h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .step-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #f0f0f0;
+      flex: 1;
+    }
+    .roadmap-footer {
+      margin-top: 20px;
+      font-style: italic;
+      color: #ccc;
+    }
+
+    /* Customer Stories */
+    .customer-stories {
+      margin: 40px 0;
+      padding: 20px;
+      background-color: var(--card-bg);
+      border-radius: 4px;
+    }
+    .customer-stories h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+    .story-card {
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .story-card blockquote {
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .story-card p {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    /* Next Steps CTA */
+    .next-steps {
+      margin: 40px 0;
+      padding: 20px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .next-steps h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+    .next-steps button {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 2px solid var(--btn-border);
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .next-steps button:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* Outcomess grouping (for "Business Outcomes" tab) */
+    .outcome-section {
+      margin-bottom: 40px;
+    }
+    .outcome-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    /* Modal base styles */
+    .modal {
+      display: none; /* Hide by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .modal-content {
+      background: rgba(255,255,255,0.1);
+      max-width: 800px;
+      width: 90%;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #fff;
+    }
+    .video-player {
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      position: relative;
+      background: #000;
+    }
+    .video-player iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .modal-info {
+      padding: 20px;
+    }
+    .modal-info h2 {
+      margin-bottom: 10px;
+    }
+    .modal-meta {
+      font-size: 0.9rem;
+      color: #ddd;
+      margin-bottom: 10px;
+    }
+    .modal-description {
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .modal-actions button {
+      background: transparent;
+      border: 2px solid #fff;
+      color: #fff;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .modal-actions button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* SEE-ALL MODAL */
+    #see-all-modal {
+      display: none; /* also hidden by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 50px;
+      z-index: 200;
+    }
+    #see-all-content {
+      background: rgba(255,255,255,0.1);
+      max-width: 1000px;
+      width: 90%;
+      border-radius: 4px;
+      position: relative;
+      padding-bottom: 20px;
+    }
+    #close-see-all {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #fff;
+    }
+    .see-all-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .video-card {
+        width: 200px;
+      }
+      .video-thumbnail {
+        height: 120px;
+      }
+      .persona-cards {
+        flex-direction: column;
+      }
+      .step-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="page-container">
+      <h1>Salesforce + AI Demo Videos</h1>
+      <p>Discover how AI-driven solutions can transform your Salesforce org. Whether you're an executive, an IT leader, or a frontline rep, our content is tailored for you.</p>
+
+      <!-- SEARCH BAR -->
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search videos, topics, or keywords..." />
+        <button id="search-button">Search</button>
+      </div>
+
+      <!-- TABS (including "Business Outcomes") -->
+      <div class="tabs-container">
+        <div class="tab active" data-category="all">All</div>
+        <div class="tab" data-category="Sales Cloud">Sales Cloud</div>
+        <div class="tab" data-category="Service Cloud">Service Cloud</div>
+        <div class="tab" data-category="Health Cloud">Health Cloud</div>
+        <div class="tab" data-category="Security & Privacy">Security</div>
+        <div class="tab" data-category="Prompts">Prompts</div>
+        <div class="tab" data-category="outcomes">Business Outcomes</div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filter-container">
+        <div class="select-wrapper">
+          <select id="filter-cloud">
+            <option value="all">All Cloud Editions</option>
+            <option value="Sales Cloud">Sales Cloud</option>
+            <option value="Service Cloud">Service Cloud</option>
+            <option value="Health Cloud">Health Cloud</option>
+            <option value="Security & Privacy">Security & Privacy</option>
+            <option value="Prompts">Prompts</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="filter-industry">
+            <option value="all">All Industries</option>
+            <option value="Retail">Retail</option>
+            <option value="Customer Support">Customer Support</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Compliance">Compliance</option>
+            <option value="Various">Various</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="filter-solution">
+            <option value="all">All Solutions</option>
+            <option value="Sales">Sales</option>
+            <option value="Service">Service</option>
+            <option value="Compliance">Compliance</option>
+            <option value="Platform">Platform</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="filter-persona">
+            <option value="all">All Personae</option>
+            <option value="Sales Teams">Sales Teams</option>
+            <option value="Service Agents">Service Agents</option>
+            <option value="Healthcare Representatives">Healthcare Representatives</option>
+            <option value="IT & Admins">IT & Admins</option>
+          </select>
+        </div>
+        <button class="clear-filters-btn" id="clear-filters">Clear Filters</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- EXPLORE BY PERSONA SECTION -->
+  <section class="persona-section page-container">
+    <h2>Explore by Persona</h2>
+    <div class="persona-cards">
+      <div class="persona-card" onclick="setPersona('Sales Teams')">
+        <h3>Sales Teams</h3>
+        <p>Find videos tailored for sales professionals.</p>
+      </div>
+      <div class="persona-card" onclick="setPersona('Service Agents')">
+        <h3>Service Agents</h3>
+        <p>Discover content for customer support experts.</p>
+      </div>
+      <div class="persona-card" onclick="setPersona('Healthcare Representatives')">
+        <h3>Healthcare Reps</h3>
+        <p>Explore videos for healthcare-focused users.</p>
+      </div>
+      <div class="persona-card" onclick="setPersona('IT & Admins')">
+        <h3>IT & Admins</h3>
+        <p>Learn about security, privacy, and prompt solutions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION FINDER SECTION -->
+  <section class="solution-finder page-container">
+    <h2>Solution Finder</h2>
+    <p>Not sure which AI solution matches your business challenge? Tell us your challenge below:</p>
+    <form onsubmit="handleSolutionFinder(event)">
+      <input type="text" id="solution-challenge" placeholder="Describe your business challenge" required />
+      <button type="submit">Find Solutions</button>
+    </form>
+  </section>
+
+  <!-- MAIN VIDEO CONTENT (Dynamically injected) -->
+  <main class="page-container" id="main-content"></main>
+
+  <!-- IMPLEMENTATION ROADMAP (CARD LAYOUT) -->
+  <section class="implementation-roadmap page-container">
+    <h2>Implementation Roadmap</h2>
+    <div class="roadmap-steps">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Plan</h3>
+        <p>Assess your Salesforce environment, define objectives, and gather data requirements.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Configure</h3>
+        <p>Install GPTfy, set up user roles, and connect relevant data sources for AI analysis.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Deploy</h3>
+        <p>Launch a pilot, train end users, and measure initial KPIs like time-to-close or CSAT.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h3>Optimize</h3>
+        <p>Use analytics to refine prompts, expand AI coverage, and unlock advanced features.</p>
+      </div>
+    </div>
+    <div class="roadmap-footer">
+      Most organizations see tangible results within 4–8 weeks.
+    </div>
+  </section>
+
+  <!-- CUSTOMER STORIES SECTION -->
+  <section class="customer-stories page-container">
+    <h2>Customer Success & Testimonials</h2>
+    <div class="story-card">
+      <blockquote>
+        “GPTfy helped our sales team close deals 20% faster – a true game changer.”
+      </blockquote>
+      <p>- VP of Sales, GlobalTech Inc.</p>
+    </div>
+    <div class="story-card">
+      <blockquote>
+        “Our IT team values GPTfy for its robust security and seamless integration.”
+      </blockquote>
+      <p>- IT Director, ACME Corp</p>
+    </div>
+  </section>
+
+  <!-- NEXT STEPS CTA SECTION -->
+  <section class="next-steps page-container">
+    <h2>Ready to Transform Your Salesforce Experience?</h2>
+    <p>Contact our experts to schedule a demo or learn more about how GPTfy can drive ROI for your organization.</p>
+    <button onclick="alert('Contact Sales form coming soon!')">Contact Sales</button>
+    <button onclick="alert('Demo request form coming soon!')">Request a Demo</button>
+  </section>
+
+  <!-- SINGLE VIDEO MODAL -->
+  <div class="modal" id="video-modal">
+    <div class="modal-content">
+      <span class="close-modal" id="close-modal">&times;</span>
+      <div class="video-player" id="modal-player"></div>
+      <div class="modal-info">
+        <h2 id="modal-title"></h2>
+        <div class="modal-meta">
+          <span id="modal-duration"></span> | <span id="modal-category"></span>
+        </div>
+        <p class="modal-description" id="modal-description"></p>
+        <div class="modal-actions">
+          <button class="share-button">Share the video</button>
+          <button class="learn-button">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEE-ALL MODAL -->
+  <div class="modal" id="see-all-modal">
+    <div class="modal-content" id="see-all-content">
+      <span class="close-modal" id="close-see-all">&times;</span>
+      <div id="see-all-grid" class="see-all-grid"></div>
+    </div>
+  </div>
+
+  <script>
+    /* 
+      ===========================
+      GLOBAL FILTER VARIABLES
+      ===========================
+    */
+    let cloudEditionFilter = "all";
+    let industryFilter = "all";
+    let solutionFilter = "all";
+    let personaFilter = "all";
+
+    /*
+      ===========================
+      FULL VIDEO DATA ARRAY
+      ===========================
+    */
+    const videosData = [
+      {
+        id: 1,
+        title: "AI dashboard: Time and cost savings boost ROI",
+        description: "Understand how GPTfy is helping your teams and where you see the biggest ROI.",
+        duration: "02:38",
+        category: "Sales Cloud",
+        videoId: "855569543",
+        tags: ["AI", "Dashboard", "ROI"],
+        featured: true,
+        cloudEdition: "Sales Cloud",
+        industry: "Retail",
+        solution: "Sales",
+        personas: ["Sales Teams"],
+        outcome: "Revenue Growth",
+        impact: "Reduces grunt work by 30%",
+        timeToValue: "2 weeks",
+        complexity: "Low",
+        level: 1
+      },
+      {
+        id: 2,
+        title: "Resolve sentiment for better renewals and deals",
+        description: "Understand whether a potential deal is at risk in less than 30 seconds.",
+        duration: "01:39",
+        category: "Sales Cloud",
+        videoId: "856229920",
+        tags: ["Sentiment", "Renewals"],
+        featured: false,
+        cloudEdition: "Sales Cloud",
+        industry: "Retail",
+        solution: "Sales",
+        personas: ["Sales Teams"],
+        outcome: "Revenue Growth",
+        impact: "Speeds up renewal insights by 25%",
+        timeToValue: "3 weeks",
+        complexity: "Medium",
+        level: 2
+      },
+      /* ... */
+      /* 
+         COPY AND PASTE ALL THE OTHER VIDEO OBJECTS FROM YOUR FULL DATA 
+         e.g. id: 3, 4, 5, etc. 
+         Make sure to include them all for the videos to show up.
+      */
+      /* 
+         The key is to ensure you have the entire array from your 
+         prior snippet with all the videos. 
+      */
+      {
+        id: 26,
+        title: "Understand the AI prompt lifecycle in Salesforce",
+        description: "Discover how to create custom prompts in GPTfy to achieve your business goals.",
+        duration: "02:11",
+        category: "Prompts",
+        videoId: "883486176",
+        tags: ["Prompts", "Lifecycle"],
+        featured: false,
+        cloudEdition: "Prompts",
+        industry: "Various",
+        solution: "Platform",
+        personas: ["IT & Admins"],
+        outcome: "Prompt Lifecycle",
+        impact: "Speeds up prompt creation by 40%",
+        timeToValue: "2 weeks",
+        complexity: "Medium",
+        level: 2
+      }
+    ];
+
+    /*
+      ===========================
+      RENDER & FILTER LOGIC
+      ===========================
+    */
+
+    // Renders the main sections
+    function renderSections(filterCategory = 'all', searchQuery = '') {
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = '';
+
+      // If user clicked "Business Outcomes" tab
+      if (filterCategory === 'outcomes') {
+        renderOutcomes();
+        return;
+      }
+
+      // Filter videos
+      const filteredVideos = filterVideos(filterCategory, searchQuery);
+
+      // If no videos match
+      if (filteredVideos.length === 0) {
+        mainContent.innerHTML = createNoResultsBlock(searchQuery);
+        return;
+      }
+
+      // Show featured if category=all and no search
+      if (filterCategory === 'all' && searchQuery.trim() === '') {
+        const featuredVideos = filteredVideos.filter(v => v.featured);
+        if (featuredVideos.length) {
+          mainContent.innerHTML += renderSection('Featured AI Demos', featuredVideos, true);
+        }
+      }
+
+      const categories = ['Sales Cloud', 'Service Cloud', 'Health Cloud', 'Security & Privacy', 'Prompts'];
+      categories.forEach(cat => {
+        const catVideos = filteredVideos.filter(video => video.category === cat);
+        if (catVideos.length) {
+          mainContent.innerHTML += renderSection(cat, catVideos, false);
+        }
+      });
+    }
+
+    // Filter function
+    function filterVideos(filterCategory, searchQuery) {
+      return videosData.filter(video => {
+        const matchesCategory = (filterCategory === 'all' || video.category === filterCategory);
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+          video.title.toLowerCase().includes(query) ||
+          video.description.toLowerCase().includes(query) ||
+          video.tags.some(tag => tag.toLowerCase().includes(query));
+
+        const matchesCloud = (cloudEditionFilter === 'all' || video.cloudEdition === cloudEditionFilter);
+        const matchesIndustry = (industryFilter === 'all' || video.industry === industryFilter);
+        const matchesSolution = (solutionFilter === 'all' || video.solution === solutionFilter);
+        const matchesPersona = (personaFilter === 'all' || video.personas.includes(personaFilter));
+
+        return matchesCategory && matchesSearch && matchesCloud && matchesIndustry && matchesSolution && matchesPersona;
+      });
+    }
+
+    // Renders a section
+    function renderSection(title, videos, isFeatured = false) {
+      const dataCategory = isFeatured ? 'featured' : title;
+      let sectionHTML = `
+        <div class="section">
+          <div class="section-header">
+            <h2>${title}</h2>
+            <a href="#" class="see-all" data-category="${dataCategory}">See all</a>
+          </div>
+          <div class="video-row">
+      `;
+      videos.forEach(video => {
+        sectionHTML += renderVideoCard(video);
+      });
+      sectionHTML += `</div></div>`;
+      return sectionHTML;
+    }
+
+    // Renders a single video card
+    function renderVideoCard(video) {
+      const featuredBadge = video.featured ? `<div class="featured-badge">Featured</div>` : '';
+      return `
+        <div class="video-card" data-id="${video.id}">
+          ${featuredBadge}
+          <div class="video-thumbnail">
+            <img 
+              src="https://vumbnail.com/${video.videoId}.jpg" 
+              alt="Thumbnail for ${video.title}" />
+            <div class="play-button"></div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">${video.title}</div>
+            <div class="video-description">${video.description}</div>
+            <div class="video-duration">${video.duration}</div>
+            <div class="video-category">${video.category}</div>
+            <div class="video-tags">Tags: ${video.tags.join(', ')}</div>
+            <div class="video-personas">Personas: ${video.personas.join(', ')}</div>
+            ${video.impact ? `<div class="video-impact">Impact: ${video.impact}</div>` : ''}
+            ${video.timeToValue ? `<div class="video-impact">Time to Value: ${video.timeToValue}</div>` : ''}
+            ${video.complexity ? `<div class="video-impact">Complexity: ${video.complexity}</div>` : ''}
+            ${video.level ? `<div class="video-impact">Level: ${video.level}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Renders outcome-based grouping for "Business Outcomes" tab
+    function renderOutcomes() {
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = '';
+
+      const filtered = filterVideos('all', '');
+      const outcomeMap = {};
+      filtered.forEach(video => {
+        const out = video.outcome || "Other";
+        if (!outcomeMap[out]) {
+          outcomeMap[out] = [];
+        }
+        outcomeMap[out].push(video);
+      });
+      const outcomes = Object.keys(outcomeMap);
+      if (outcomes.length === 0) {
+        mainContent.innerHTML = createNoResultsBlock('');
+        return;
+      }
+      outcomes.forEach(outcome => {
+        const videos = outcomeMap[outcome];
+        mainContent.innerHTML += `
+          <div class="section outcome-section">
+            <h2>${outcome}</h2>
+            <div class="video-row">
+              ${videos.map(v => renderVideoCard(v)).join('')}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // No results
+    function createNoResultsBlock(searchQuery) {
+      const userSearched = searchQuery.trim() !== "";
+      const headingText = userSearched
+        ? `No matching videos found for "${searchQuery}".`
+        : `No videos found.`;
+      const subText = userSearched
+        ? `This is not what you are looking for? Suggest a new video topic:`
+        : `Suggest a new video topic:`;
+
+      return `
+        <div class="no-results">
+          <h2>${headingText}</h2>
+          <p>${subText}</p>
+          <form class="suggestion-form" onsubmit="handleSuggestion(event)">
+            <label for="suggestionName">Your Name:</label>
+            <input type="text" id="suggestionName" placeholder="Enter your name" required />
+            <label for="suggestionEmail">Your Email:</label>
+            <input type="email" id="suggestionEmail" placeholder="Enter your email" required />
+            <label for="suggestionTopic">Video Topic Suggestion:</label>
+            <textarea id="suggestionTopic" rows="3" placeholder="Describe the video you'd like us to create..." required></textarea>
+            <button type="submit">Submit Suggestion</button>
+          </form>
+        </div>
+      `;
+    }
+
+    function handleSuggestion(event) {
+      event.preventDefault();
+      alert("Thank you for your suggestion!");
+      document.querySelector('.suggestion-form').reset();
+    }
+
+    /* SEE-ALL MODAL */
+    function openCategoryModal(category) {
+      const seeAllModal = document.getElementById('see-all-modal');
+      const seeAllGrid = document.getElementById('see-all-grid');
+      let videosToShow = [];
+      if (category === 'featured') {
+        videosToShow = filterVideos('all', '').filter(v => v.featured);
+      } else {
+        videosToShow = filterVideos(category, '');
+      }
+      seeAllGrid.innerHTML = videosToShow.map(v => renderVideoCard(v)).join('');
+      seeAllModal.style.display = 'flex';
+    }
+    function closeCategoryModal() {
+      document.getElementById('see-all-modal').style.display = 'none';
+      document.getElementById('see-all-grid').innerHTML = '';
+    }
+
+    /* PERSONA SELECTION */
+    function setPersona(selectedPersona) {
+      document.getElementById('filter-persona').value = selectedPersona;
+      personaFilter = selectedPersona;
+      renderSections('all', '');
+    }
+
+    /* SOLUTION FINDER */
+    function handleSolutionFinder(event) {
+      event.preventDefault();
+      const challenge = document.getElementById('solution-challenge').value;
+      document.getElementById('search-input').value = challenge;
+      renderSections('all', challenge);
+    }
+
+    /* VIDEO MODAL */
+    const modal = document.getElementById('video-modal');
+    const closeModal = document.getElementById('close-modal');
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.video-card')) {
+        if (e.target.matches('.see-all')) return;
+        const card = e.target.closest('.video-card');
+        const vidId = card.getAttribute('data-id');
+        const videoData = videosData.find(v => v.id == vidId);
+        if (videoData) {
+          openVideoModal(videoData);
+        }
+      }
+    });
+    function openVideoModal(video) {
+      document.getElementById('modal-title').innerText = video.title;
+      document.getElementById('modal-description').innerText = video.description;
+      document.getElementById('modal-duration').innerText = video.duration;
+      document.getElementById('modal-category').innerText = video.category;
+      document.getElementById('modal-player').innerHTML = `
+        <iframe 
+          src="https://player.vimeo.com/video/${video.videoId}?autoplay=1" 
+          allow="autoplay; fullscreen" 
+          allowfullscreen>
+        </iframe>
+      `;
+      modal.style.display = 'flex';
+    }
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+      document.getElementById('modal-player').innerHTML = '';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        document.getElementById('modal-player').innerHTML = '';
+      }
+    });
+
+    /* TAB CLICKS */
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('search-input').value = '';
+        renderSections(this.dataset.category, '');
+      });
+    });
+
+    /* SEARCH BUTTON */
+    document.getElementById('search-button').addEventListener('click', () => {
+      const query = document.getElementById('search-input').value;
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      renderSections('all', query);
+    });
+    document.getElementById('search-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('search-button').click();
+      }
+    });
+
+    /* CLEAR FILTERS */
+    document.getElementById('clear-filters').addEventListener('click', function() {
+      cloudEditionFilter = "all";
+      industryFilter = "all";
+      solutionFilter = "all";
+      personaFilter = "all";
+      document.getElementById('filter-cloud').value = "all";
+      document.getElementById('filter-industry').value = "all";
+      document.getElementById('filter-solution').value = "all";
+      document.getElementById('filter-persona').value = "all";
+      document.getElementById('search-input').value = "";
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      const allTab = document.querySelector(".tab[data-category='all']");
+      if (allTab) allTab.classList.add("active");
+      renderSections("all", "");
+    });
+
+    /* SEE-ALL MODAL close event */
+    const closeSeeAllBtn = document.getElementById('close-see-all');
+    closeSeeAllBtn.addEventListener('click', closeCategoryModal);
+    window.addEventListener('click', e => {
+      if (e.target === document.getElementById('see-all-modal')) {
+        closeCategoryModal();
+      }
+    });
+
+    /* INITIAL RENDER */
+    renderSections();
+  </script>
+</body>
+</html>
