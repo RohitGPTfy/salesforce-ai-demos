@@ -661,7 +661,7 @@
       padding: 20px;
     }
 
-    /* 
+    /*
       ================================================
       RESPONSIVE MEDIA QUERIES FOR BETTER MOBILE VIEW
       ================================================
@@ -709,7 +709,7 @@
       }
       .video-thumbnail {
         height: auto;
-        aspect-ratio: 16/9; /* So we keep a 16:9 ratio for images */
+        aspect-ratio: 16/9; /* keep 16:9 ratio for images */
       }
 
       /* Implementation Roadmap steps stack */
@@ -917,7 +917,7 @@
   </div>
 
   <script>
-    /*
+    /* 
       ============================================
       GLOBAL FILTER VARIABLES & COMPLETE VIDEO DATA
       ============================================
@@ -929,11 +929,10 @@
 
     /* 
       PASTE YOUR FULL videosData ARRAY HERE,
-      with all 26 (or more) video objects,
-      including "featured", "outcome", "impact", etc.
+      with all 26 (or more) video objects.
+      Example partial below:
     */
     const videosData = [
-      // Example partial:
       {
         id: 1,
         title: "AI dashboard: Time and cost savings boost ROI",
@@ -953,7 +952,7 @@
         complexity: "Low",
         level: 1
       },
-      // ... Insert the rest of your video objects here ...
+      // ... your other videos ...
     ];
 
     /*
@@ -961,6 +960,7 @@
       RENDER & FILTER LOGIC
       ===========================
     */
+
     function renderSections(filterCategory = 'all', searchQuery = '') {
       const mainContent = document.getElementById('main-content');
       mainContent.innerHTML = '';
@@ -1253,4 +1253,3 @@
   </script>
 </body>
 </html>
-
